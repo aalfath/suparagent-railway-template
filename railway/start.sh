@@ -56,4 +56,5 @@ cd /app/backend
 python -m app.server migrate
 # Set the owner passphrase from SUPARAGENT_OWNER_PASSPHRASE (first start, or after you change the variable).
 python /usr/local/lib/railway_bootstrap_owner.py
-exec python -m app.server
+# Same as `python -m app.server`, with the visitor's address taken from Railway's edge (see serve.py).
+exec python /usr/local/lib/railway_serve.py

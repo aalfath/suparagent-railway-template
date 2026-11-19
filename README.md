@@ -8,7 +8,7 @@ One service, built from this repo's `Dockerfile`:
 
 - the official server image `ghcr.io/anil-matcha/suparagent:v0.8.7`, pinned by digest (`sha256:76081103077a8da4637d7c30e97ed72420f0c7322e2fab920472406f7848f79a`);
 - the Claude Code (`@anthropic-ai/claude-code@2.1.328`) and Codex (`@openai/codex@0.170.0`) CLIs, installed the way upstream's `ENGINES` build argument does, so you can sign in to either from **Settings → Engines**. Gemini, Cursor, OpenRouter and any OpenAI-compatible endpoint work with an API key and need no CLI;
-- a small start script (`railway/start.sh`) and `railway/bootstrap_owner.py`, which sets the owner passphrase from a generated variable.
+- a small start script (`railway/start.sh`), `railway/bootstrap_owner.py`, which sets the owner passphrase from a generated variable, and `railway/serve.py`, which starts the server with the visitor's real address (see below).
 
 Everything Suparagent keeps (the SQLite database, attachments, decision log, agent workspaces and the engines' sign-ins) is on a Railway volume at `/data`. The health check is `GET /api/v1/health`.
 
@@ -25,6 +25,8 @@ Upstream marks its releases as pre-releases and says the project is in active de
 
 The start script also sets, unless you override them: `TRUSTED_PROXIES=100.64.0.0/10` (Railway's edge proxy, so the sign-in cookie is marked `Secure`), `TRUSTED_HOSTS` (adds Railway's health checker), `LOCAL_EXECUTION_ENABLED=true` (agents can run; tools stay off until `LOCAL_TOOLS_ENABLED=true`, and every command still asks for approval) and `LOOPBACK_TRUST=off`.
 
+Suparagent locks an address out after 5 wrong passphrases in 15 minutes. Railway's edge sends `X-Forwarded-For: visitor, CDN hop`, and the hop changes between requests, so on its own the server would count failures against Railway's CDN nodes instead of the visitor. `railway/serve.py` takes the visitor's address from `X-Real-IP`, which Railway's edge sets itself, and only for requests that come from the edge (`100.64.0.0/10`).
+
 ### First sign-in
 
 Open the public URL, choose **Sign in** and enter `SUPARAGENT_OWNER_PASSPHRASE`. Then connect an engine in **Settings → Engines**: save an OpenRouter or OpenAI-compatible key, or use **Sign in to Claude** / **Sign in to Codex** for the bundled CLIs. Invite teammates from **Settings → Account & privacy → People**.
@@ -40,5 +42,6 @@ Railway tells everyone who deployed this template when this repo's `main` branch
 - `Dockerfile`: the pinned base image, the engine CLIs and the start command.
 - `railway/start.sh`: Railway defaults, volume ownership, migration, owner passphrase, then the server.
 - `railway/bootstrap_owner.py`: sets the owner passphrase from `SUPARAGENT_OWNER_PASSPHRASE`.
+- `railway/serve.py`: `python -m app.server` with the visitor's address taken from Railway's edge.
 
 Suparagent is © its authors, Apache-2.0. This wrapper is maintained by Heron Technology.

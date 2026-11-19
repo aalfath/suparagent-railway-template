@@ -18,6 +18,7 @@ COPY --from=engines /out /opt/engines
 USER root
 COPY --chmod=755 railway/start.sh /usr/local/bin/railway-start.sh
 COPY --chmod=644 railway/bootstrap_owner.py /usr/local/lib/railway_bootstrap_owner.py
+COPY --chmod=644 railway/serve.py /usr/local/lib/railway_serve.py
 
 # The CLIs are pinned here; updates come through this repo, not from the CLIs updating themselves.
 ENV DISABLE_AUTOUPDATER=1
