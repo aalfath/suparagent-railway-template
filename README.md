@@ -1,5 +1,7 @@
 # Suparagent on Railway
 
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/new/template/suparagent?utm_medium=integration&utm_source=button&utm_campaign=suparagent)
+
 A one-click [Railway](https://railway.com) template for [Suparagent](https://github.com/Anil-matcha/suparagent), the open-source, self-hosted workspace for AI coworkers: named agents with instructions, memory, routines, connected apps and your approval before they act.
 
 ## What it deploys

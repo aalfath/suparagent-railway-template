@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-19: README button
+
+- No change to the app or its settings. The README now starts with the Deploy on Railway button for the published template (`suparagent`).
+
 ## v0.8.7 (2026-11-19)
 
 First release of the template.
